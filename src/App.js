@@ -28,8 +28,11 @@ function App() {
   const debouncedSendQuery = _.throttle(setSearchQuery, 2000);
 
   const [result_list, fillResultList] = useState(null);
+  const [filtered_list, fillFilteredResult] = useState(null);
 
-
+  const filterResult = (result_list, query) => {
+    return result_list.filter(item => item.name.indexOf(query) > -1).slice(4);
+  }
 
   const handleSearchListClick = (id) => {
     deezerService(id, endpoints.artist, setArtistDetials);
