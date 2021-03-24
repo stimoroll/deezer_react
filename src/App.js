@@ -1,40 +1,34 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
 import _ from 'lodash';
+import endpoints from './config/endpoints';
+import { deezerService } from './services/deezer';
+
 import './App.css';
 
-const search_endpint = (search) => `https://proxy.kpoplawski.repl.co/search/${search}`;
-const artist_endpint = (artist) => `https://proxy.kpoplawski.repl.co/artist/${artist}`;
+const SarchInfo = ({search_term}) => {
+  const label = `Search results for "${search_term}"`
+  return (
+    <h2></h2>
+  );
+}
+
+const AutoComplete = () => {
+  //Sarch here ( assigement 1)
+  return (
+    <></>
+  );
+}
+
 
 function App() {
   const input_ref = useRef()
-  // const [search_query, setSearchQuery] = useState('');
-  const [search_query, setSearchQuery] = useState('kult');
+  const [search_query, setSearchQuery] = useState('');
   const [input_value, setInputValue] = useState('');
   const [artist_details, setArtistDetials] = useState(null);
 
   const debouncedSendQuery = _.throttle(setSearchQuery, 2000);
 
   const [result_list, fillResultList] = useState(null);
-  // const [result_list, fillResultList] = useState([]);
-
-  const searchArtistService = _.throttle((search_query, callback) => {
-    axios.get(search_endpint(search_query))
-      .then(response => {
-        callback(response.data.data);
-        // console.log(response.data.data);
-      })
-      .catch(error => console.log(error));
-  }, 1000);
-
-  const getArtistService = _.throttle((artist_id, callback) => {
-      axios.get(artist_endpint(artist_id))
-        .then(response => {
-          callback(response.data.data);
-          // console.log(response.data.data);
-        })
-        .catch(error => console.log(error));
-  }, 300);
 
   const handleInputChange = (e) => {
     console.log(e);
@@ -44,12 +38,12 @@ function App() {
   }
 
   const handleSearchListClick = (id) => {
-    getArtistService(id, setArtistDetials);
+    deezerService(id, endpoints.artist, setArtistDetials);
   }
 
   useEffect(() => {
     if (search_query && search_query.length > 0) {
-      searchArtistService(search_query, fillResultList);
+      deezerService(search_query, endpoints.search, fillResultList);
     }
   }, [search_query]);
 
@@ -59,6 +53,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <form className="autocomplete">
         <input
           type="text"
           className="input__search"
@@ -73,7 +68,7 @@ function App() {
               onClick={() => handleSearchListClick(record.id)}>{record.name}</li>)}
           </ul>
         }
-
+      </form>
       </header>
     </div>
   );
