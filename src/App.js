@@ -22,8 +22,9 @@ const AutoComplete = () => {
 
 function App() {
   const input_ref = useRef()
-  const [search_query, setSearchQuery] = useState('');
-  const [input_value, setInputValue] = useState('');
+  const [search_query, setSearchQuery] = useState(null);
+  // const [search_query, setSearchQuery] = useState('kult');
+  const [input_value, setInputValue] = useState(null);
   const [artist_details, setArtistDetials] = useState(null);
 
   const debouncedSendQuery = _.throttle(setSearchQuery, 2000);
@@ -31,9 +32,7 @@ function App() {
   const [result_list, fillResultList] = useState(null);
 
   const handleInputChange = (e) => {
-    console.log(e);
     setInputValue(e.target.value);
-
     debouncedSendQuery(e.target.value);
   }
 
@@ -59,11 +58,13 @@ function App() {
           className="input__search"
           value={input_value}
           ref={input_ref}
+          palceholder="Start typing for search ..."
           onChange={handleInputChange}
         />
-        {result_list &&
+        {(search_query && search_query.length > 0)  &&
           <ul>
-            {result_list.map(record => <li
+            <li>Search results:</li>
+            {result_list && result_list.map(record => <li
               key={record.id}
               onClick={() => handleSearchListClick(record.id)}>{record.name}</li>)}
           </ul>
