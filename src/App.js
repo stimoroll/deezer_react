@@ -8,20 +8,21 @@ const artist_endpint = (artist) => `https://proxy.kpoplawski.repl.co/artist/${ar
 
 function App() {
   const input_ref = useRef()
-  const [search_query, setSearchQuery] = useState('');
+  // const [search_query, setSearchQuery] = useState('');
+  const [search_query, setSearchQuery] = useState('kult');
   const [input_value, setInputValue] = useState('');
+  const [artist_details, setArtistDetials] = useState(null);
 
   const debouncedSendQuery = _.throttle(setSearchQuery, 2000);
 
-  // const [result_list, fillResultList] = useState(null);
-  const [result_list, fillResultList] = useState([]);
+  const [result_list, fillResultList] = useState(null);
+  // const [result_list, fillResultList] = useState([]);
 
   const searchArtistService = _.throttle((search_query, callback) => {
     axios.get(search_endpint(search_query))
       .then(response => {
-        // fillResultList(response.data.data);
         callback(response.data.data);
-        console.log(response.data.data);
+        // console.log(response.data.data);
       })
       .catch(error => console.log(error));
   }, 1000);
@@ -29,9 +30,8 @@ function App() {
   const getArtistService = _.throttle((artist_id, callback) => {
       axios.get(artist_endpint(artist_id))
         .then(response => {
-          // fillResultList(response.data.data);
           callback(response.data.data);
-          console.log(response.data.data);
+          // console.log(response.data.data);
         })
         .catch(error => console.log(error));
   }, 300);
@@ -42,15 +42,14 @@ function App() {
 
     debouncedSendQuery(e.target.value);
   }
+
+  const handleSearchListClick = (id) => {
+    getArtistService(id, setArtistDetials);
+  }
+
   useEffect(() => {
     if (search_query && search_query.length > 0) {
       searchArtistService(search_query, fillResultList);
-      // axios.get(search_endpint(search_query))
-      //   .then(response => {
-      //     fillResultList(response.data.data);
-      //     console.log(response.data.data);
-      //   })
-      //   .catch(error => console.log(error));
     }
   }, [search_query]);
 
@@ -67,9 +66,13 @@ function App() {
           ref={input_ref}
           onChange={handleInputChange}
         />
-        <ul>
-          {result_list.map(record => <li key={record.key}>{record.name}</li>)}
-        </ul>
+        {result_list &&
+          <ul>
+            {result_list.map(record => <li
+              key={record.id}
+              onClick={() => handleSearchListClick(record.id)}>{record.name}</li>)}
+          </ul>
+        }
 
       </header>
     </div>
