@@ -15,10 +15,12 @@ function App() {
     setSearchQuery(e.target.value);
   }
   useEffect(() => {
-    if (search_query && search_query.length > 0) {
-      axios.get(search_endpint(search_query)).then(response => console.log(response));
-    }
-  }, [])
+    // if (search_query && search_query.length > 0) {
+      axios.get(search_endpint(search_query))
+        .then(response => console.log(response))
+        .catch(error => console.log(error));
+    // }
+  }, [search_query])
   return (
     <div className="App">
       <header className="App-header">
