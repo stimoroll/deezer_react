@@ -1,9 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import endpoints from './config/endpoints';
 import { deezerService } from './services/deezer';
+import AutoComplete from './components/search/Autocomplete';
 
 import './App.css';
+
+/*
+TODO: search input should dispaly: Search Here and count of result so
+TODO: in proxy remove limit and move limit to inside of Autocomplete component
+*/
 
 const SarchInfo = ({search_term}) => {
   const label = `Search results for "${search_term}"`
@@ -12,16 +18,8 @@ const SarchInfo = ({search_term}) => {
   );
 }
 
-const AutoComplete = () => {
-  //Sarch here ( assigement 1)
-  return (
-    <></>
-  );
-}
-
-
 function App() {
-  const input_ref = useRef()
+  
   const [search_query, setSearchQuery] = useState(null);
   // const [search_query, setSearchQuery] = useState('kult');
   const [input_value, setInputValue] = useState(null);
@@ -31,10 +29,7 @@ function App() {
 
   const [result_list, fillResultList] = useState(null);
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-    debouncedSendQuery(e.target.value);
-  }
+
 
   const handleSearchListClick = (id) => {
     deezerService(id, endpoints.artist, setArtistDetials);
@@ -46,30 +41,15 @@ function App() {
     }
   }, [search_query]);
 
-  useEffect(() => {
-    input_ref.current.focus();
-  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <form className="autocomplete">
-        <input
-          type="text"
-          className="input__search"
-          value={input_value}
-          ref={input_ref}
-          palceholder="Start typing for search ..."
-          onChange={handleInputChange}
+        <AutoComplete
+          changeCallback={debouncedSendQuery}
+          data={result_list}
+          handleSearchListClick={handleSearchListClick}
         />
-        {(search_query && search_query.length > 0)  &&
-          <ul>
-            <li>Search results:</li>
-            {result_list && result_list.map(record => <li
-              key={record.id}
-              onClick={() => handleSearchListClick(record.id)}>{record.name}</li>)}
-          </ul>
-        }
-      </form>
       </header>
     </div>
   );
