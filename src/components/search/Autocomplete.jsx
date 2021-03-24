@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-const AutoComplete = ({changeCallback, handleSearchListClick, data}) => {
+const AutoComplete = ({changeCallback, handleSearchListClick, data, resultCount = 0}) => {
   const input_ref = useRef();
   const [input_value, setInputValue] = useState(null);
+  const [displayed_value, setDisplayedValue] = useState('');
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    // debouncedSendQuery(e.target.value);
+    setDisplayedValue(e.target.value);
     changeCallback(e.target.value);
   }
 
@@ -19,12 +20,15 @@ const AutoComplete = ({changeCallback, handleSearchListClick, data}) => {
   useEffect(() => {
     input_ref.current.focus();
   }, []);
+  
+  useEffect(() => {
+  }, [input_value]);
   return (
     <form className="autocomplete">
       <input
           type="text"
           className="input__search"
-          value={input_value}
+          value={displayed_value}
           ref={input_ref}
           palceholder="Start typing for search ..."
           onChange={handleInputChange}
