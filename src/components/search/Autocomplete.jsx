@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import SearchInfo from './SearchInfo';
 
 const AutoComplete = ({changeCallback, handleSearchListClick, data, resultCount = 0}) => {
   const input_ref = useRef();
@@ -36,7 +37,7 @@ const AutoComplete = ({changeCallback, handleSearchListClick, data, resultCount 
         />
         {(input_value && input_value.length > 0)  &&
           <ul>
-            <li>Search results:</li>
+            <SearchInfo key="info" search_term={displayed_value} />
             {data && data.map(record => <li
               key={record.id}
               onClick={() => handleSearchListClick(record.id)}>{record.name}</li>)}

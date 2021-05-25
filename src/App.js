@@ -6,23 +6,12 @@ import AutoComplete from './components/search/Autocomplete';
 
 import './App.css';
 
-const SarchInfo = ({search_term}) => {
-  const label = `Search results for "${search_term}"`
-  return (
-    <h2></h2>
-  );
-}
-
 function App() {
   
   const [search_query, setSearchQuery] = useState(null);
   const [result_count, setResultCount] = useState(0);
-  const [input_value, setInputValue] = useState(null);
-  const [artist_details, setArtistDetials] = useState(null);
-
+  const [setArtistDetials] = useState(null);
   const debouncedSendQuery = _.throttle(setSearchQuery, 300);
-
-  const [result_list, fillResultList] = useState(null);
   const [filtered_list, fillFilteredResult] = useState(null);
 
   const filterResult = (result_list, query) => {
@@ -41,7 +30,7 @@ function App() {
     if (search_query && search_query.length > 1) {
       const fillResultWithFilter = (result) => {
         const res = filterResult(result, search_query);
-        fillResultList(result);
+        // fillResultList(result);
         fillFilteredResult(res);
         setResultCount(result ? result.length : 0);
       }
